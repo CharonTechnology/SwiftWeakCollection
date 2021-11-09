@@ -5,6 +5,10 @@ import XCTest
 class Foo {
 }
 
+class Hello {
+    let msg = "hello"
+}
+
 final class WeakCollectionTests: XCTestCase {
 	func testWeakArray() {
 		var array = WeakArray<Foo>()
@@ -26,8 +30,35 @@ final class WeakCollectionTests: XCTestCase {
 		XCTAssertNil(weakFoo)
 	}
 
+    func testUnownedDictionary() {
+        var dict = UnownedDictionary<String, Foo>()
+        weak var weakFoo: Foo?
+        do {
+            let foo = Foo()
+            weakFoo = foo
+            dict["foo"] = foo
+
+            XCTAssertNotNil(dict["foo"])
+        }
+
+        XCTAssertNil(weakFoo)
+    }
+
+    func testWeakDictionary() {
+        var dict = WeakDictionary<String, Foo>()
+        do {
+            let foo = Foo()
+            dict["foo"] = foo
+
+            XCTAssertNotNil(dict["foo"])
+        }
+        XCTAssertNil(dict["foo"])
+    }
+
 	static var allTests = [
 		("testWeakArray", testWeakArray),
-		("testUnownedArray", testUnownedArray)
+		("testUnownedArray", testUnownedArray),
+        ("testWeakDictionary", testWeakDictionary),
+        ("testUnownedDictionary", testUnownedDictionary),
 	]
 }
